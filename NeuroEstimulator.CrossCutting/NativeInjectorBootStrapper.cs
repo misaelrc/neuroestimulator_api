@@ -25,7 +25,14 @@ public class NativeInjectorBootStrapper
 
     public static void AddServices(IServiceCollection services)
     {
+        services.AddScoped<IAccountProfileService, AccountProfileService>();
         services.AddScoped<IAccountService, AccountService>();
+        services.AddScoped<IPatientService, PatientService>();
+        services.AddScoped<IProfileService, ProfileService>();
+        services.AddScoped<ISessionParametersService, SessionParametersService>();
+        services.AddScoped<ISessionPhotoService, SessionPhotoService>();
+        services.AddScoped<ISessionSegmentService, SessionSegmentService>();
+        services.AddScoped<ISessionService, SessionService>();
     }
 
     public static void AddDatabase(IServiceCollection services)

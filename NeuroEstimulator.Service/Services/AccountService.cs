@@ -8,6 +8,7 @@ using NeuroEstimulator.Framework.Exceptions;
 using NeuroEstimulator.Framework.Interfaces;
 using NeuroEstimulator.Framework.Services;
 using NeuroEstimulator.Service.Interfaces;
+using Newtonsoft.Json;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -23,7 +24,7 @@ public class AccountService : ServiceBase, IAccountService
 
     private readonly IJwtUtil _jwtUtil;
     private readonly IAccountRepository _accountRepository;
-    //private readonly IAccountProfileService _accountProfileService;
+    private readonly IAccountProfileService _accountProfileService;
 
     #endregion
 
@@ -34,14 +35,14 @@ public class AccountService : ServiceBase, IAccountService
         , IConfiguration configuration
         , IJwtUtil jwtUtil
         , IAccountRepository accountRepository
-        /*, IAccountProfileService accountProfileService*/)
+        , IAccountProfileService accountProfileService)
         : base(apiContext)
     {
         _apiContext = apiContext;
         _configuration = configuration;
         _jwtUtil = jwtUtil;
         _accountRepository = accountRepository;
-        //_accountProfileService = accountProfileService;
+        _accountProfileService = accountProfileService;
     }
 
     #endregion
@@ -181,29 +182,29 @@ public class AccountService : ServiceBase, IAccountService
                 new Claim("name", account.Name)
             };
 
-        //var userProfiles = _accountProfileService.GetAccountProfiles(account.Id);
+        var userProfiles = _accountProfileService.GetAccountProfiles(account.Id);
 
-        //AddProfilesToClaims(claims, userProfiles);
+        AddProfilesToClaims(claims, userProfiles);
 
         AuthorizationViewModel authorizationResult = new AuthorizationViewModel
         {
             Token = _jwtUtil.CreateJwt(claims),
-            //Profiles = userProfiles,
+            Profiles = userProfiles,
         };
 
         return authorizationResult;
     }
 
-    /*private void AddProfilesToClaims(List<Claim> claims, List<ProfileViewModel> profiles)
+    private void AddProfilesToClaims(List<Claim> claims, List<ProfileViewModel> profiles)
+    {
+        var settings = new JsonSerializerSettings
         {
-            var settings = new JsonSerializerSettings
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        };
 
-            var applicationSerializable = JsonConvert.SerializeObject(profiles, settings);
-            claims.Add(new Claim("profiles", applicationSerializable));
-        }
-    */
+        var applicationSerializable = JsonConvert.SerializeObject(profiles, settings);
+        claims.Add(new Claim("profiles", applicationSerializable));
+    }
+    
     #endregion
 }

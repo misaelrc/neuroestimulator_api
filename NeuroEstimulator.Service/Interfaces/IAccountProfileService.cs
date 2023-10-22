@@ -1,5 +1,8 @@
-﻿namespace NeuroEstimulator.Service.Interfaces;
+﻿using NeuroEstimulator.Domain.ViewModels;
 
-public class IAccountProfileService
+namespace NeuroEstimulator.Service.Interfaces;
+
+public interface IAccountProfileService
 {
+    List<ProfileViewModel> GetAccountProfiles(Guid accountId);
 }

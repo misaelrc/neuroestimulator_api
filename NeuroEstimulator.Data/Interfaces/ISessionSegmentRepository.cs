@@ -3,6 +3,6 @@ using NeuroEstimulator.Framework.Database.EfCore.Interface;
 
 namespace NeuroEstimulator.Data.Interfaces;
 
-public interface ISessionSegment : IRepositoryBase<SessionSegment>
+public interface ISessionSegmentRepository : IRepositoryBase<SessionSegment>
 {
 }
