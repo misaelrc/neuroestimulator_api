@@ -40,6 +40,13 @@ public class NativeInjectorBootStrapper
     {
         services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
 
+        services.AddScoped<IAccountProfileRepository, AccountProfileRepository>();
         services.AddScoped<IAccountRepository, AccountRepository>();
+        services.AddScoped<IPatientRepository, PatientRepository>();
+        services.AddScoped<IProfileRepository, ProfileRepository>();
+        services.AddScoped<ISessionParametersRepository, SessionParametersRepository>();
+        services.AddScoped<ISessionPhotoRepository, SessionPhotoRepository>();
+        services.AddScoped<ISessionRepository, SessionRepository>();
+        services.AddScoped<ISessionSegmentRepository, SessionSegmentRepository>();
     }
 }
