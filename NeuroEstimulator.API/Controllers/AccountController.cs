@@ -63,6 +63,18 @@ namespace NeuroEstimulator.API.Controllers
             var response = this.ServiceInvoke(_accountService.RefreshToken);
             return response;
         }
+
+        /// <summary>
+        /// Efetua o refresh token de autorização de uma conta de usuário e retorna permissões de acesso de uma aplicação específica
+        /// </summary>
+        [Route("Authorization/Encrypt")]
+        [HttpPost]
+        [ProducesDefaultResponseType(typeof(ApiResponse<string>))]
+        public IActionResult Encrypt([FromBody]string pass)
+        {
+            var response = this.ServiceInvoke(_accountService.Encrypt,pass);
+            return response;
+        }
         #endregion
     }
 }

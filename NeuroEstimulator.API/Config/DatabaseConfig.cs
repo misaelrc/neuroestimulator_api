@@ -14,15 +14,15 @@ public static class DatabaseConfig
             throw new ArgumentNullException(nameof(services));
         }
 
-        var keyVaultEndpoint = new Uri(configuration["VaultKey"]);
-        var secretClient = new SecretClient(keyVaultEndpoint, new DefaultAzureCredential());
-        //var databaseConnectionString = configuration.GetConnectionString("DB");
+        //var keyVaultEndpoint = new Uri(configuration["VaultKey"]);
+        //var secretClient = new SecretClient(keyVaultEndpoint, new DefaultAzureCredential());
+        var databaseConnectionString = configuration.GetConnectionString("DB");
 
-        KeyVaultSecret kvs = secretClient.GetSecret("NeuroEstimulatorConnDbString");
+        //KeyVaultSecret kvs = secretClient.GetSecret("NeuroEstimulatorConnDbString");
 
         services.AddDbContext<DatabaseContext>(options =>
         {
-            options.UseSqlServer(kvs.Value);
+            options.UseSqlServer(databaseConnectionString);
         });
     }
 }

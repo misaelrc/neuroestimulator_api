@@ -24,7 +24,12 @@ public class SessionMap : BaseAuditEntityMap<Session, Guid>
             .IsRequired();
 
         builder.HasOne(x => x.Therapist);
-        builder.HasOne(x => x.Patient);
+        builder
+            .HasOne(x => x.Patient)
+            .WithMany()
+            .HasForeignKey(x=> x.PatientId)
+            .OnDelete(DeleteBehavior.NoAction);
+
         builder.HasOne(x => x.Parameters);
 
         builder

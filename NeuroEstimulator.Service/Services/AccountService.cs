@@ -173,7 +173,7 @@ public class AccountService : ServiceBase, IAccountService
         return hash;
     }
 
-    private AuthorizationViewModel CreateUsersClaim(AuthorizationPayload payload, NeuroEstimulator.Domain.Entities.Account account, bool loadApplications = false)
+    private AuthorizationViewModel CreateUsersClaim(AuthorizationPayload payload, Account account, bool loadApplications = false)
     {
         List<Claim> claims = new List<Claim>
             {

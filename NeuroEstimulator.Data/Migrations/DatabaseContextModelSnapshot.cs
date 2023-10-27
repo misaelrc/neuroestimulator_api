@@ -73,7 +73,8 @@ namespace NeuroEstimulator.Data.Migrations
 
                     b.Property<DateTime>("CreationDate")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("datetime2");
@@ -90,7 +91,7 @@ namespace NeuroEstimulator.Data.Migrations
 
                     b.HasIndex("ProfileId");
 
-                    b.ToTable("AccountProfile");
+                    b.ToTable("AccountProfile", (string)null);
                 });
 
             modelBuilder.Entity("NeuroEstimulator.Domain.Entities.Patient", b =>
@@ -106,17 +107,20 @@ namespace NeuroEstimulator.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("BirthDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
                     b.Property<DateTime>("CreationDate")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("SessionAllowed")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
@@ -125,7 +129,7 @@ namespace NeuroEstimulator.Data.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.ToTable("Patient");
+                    b.ToTable("Patient", (string)null);
                 });
 
             modelBuilder.Entity("NeuroEstimulator.Domain.Entities.Profile", b =>
@@ -139,25 +143,26 @@ namespace NeuroEstimulator.Data.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(80)");
 
                     b.Property<DateTime>("CreationDate")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(150)");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Profile");
+                    b.ToTable("Profile", (string)null);
                 });
 
             modelBuilder.Entity("NeuroEstimulator.Domain.Entities.Session", b =>
@@ -171,7 +176,8 @@ namespace NeuroEstimulator.Data.Migrations
 
                     b.Property<DateTime>("CreationDate")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("datetime2");
@@ -181,9 +187,6 @@ namespace NeuroEstimulator.Data.Migrations
 
                     b.Property<Guid>("PatientId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
 
                     b.Property<Guid>("TherapistId")
                         .HasColumnType("uniqueidentifier");
@@ -195,7 +198,11 @@ namespace NeuroEstimulator.Data.Migrations
 
                     b.HasIndex("ParametersId");
 
-                    b.ToTable("Session");
+                    b.HasIndex("PatientId");
+
+                    b.HasIndex("TherapistId");
+
+                    b.ToTable("Session", (string)null);
                 });
 
             modelBuilder.Entity("NeuroEstimulator.Domain.Entities.SessionParameters", b =>
@@ -212,7 +219,8 @@ namespace NeuroEstimulator.Data.Migrations
 
                     b.Property<DateTime>("CreationDate")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("datetime2");
@@ -228,7 +236,7 @@ namespace NeuroEstimulator.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SessionParameters");
+                    b.ToTable("SessionParameters", (string)null);
                 });
 
             modelBuilder.Entity("NeuroEstimulator.Domain.Entities.SessionPhoto", b =>
@@ -242,14 +250,15 @@ namespace NeuroEstimulator.Data.Migrations
 
                     b.Property<DateTime>("CreationDate")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Path")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(300)");
 
                     b.Property<Guid>("SessionId")
                         .HasColumnType("uniqueidentifier");
@@ -261,7 +270,7 @@ namespace NeuroEstimulator.Data.Migrations
 
                     b.HasIndex("SessionId");
 
-                    b.ToTable("SessionPhoto");
+                    b.ToTable("SessionPhoto", (string)null);
                 });
 
             modelBuilder.Entity("NeuroEstimulator.Domain.Entities.SessionSegment", b =>
@@ -275,16 +284,14 @@ namespace NeuroEstimulator.Data.Migrations
 
                     b.Property<DateTime>("CreationDate")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FinishedAt")
+                    b.Property<DateTime?>("FinishedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid>("ParametersId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("SessionId")
                         .HasColumnType("uniqueidentifier");
@@ -292,13 +299,16 @@ namespace NeuroEstimulator.Data.Migrations
                     b.Property<DateTime>("StartedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("UsedParametersId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<double>("WristAmplitudeMeasurement")
+                    b.Property<double?>("WristAmplitudeMeasurement")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
@@ -307,7 +317,7 @@ namespace NeuroEstimulator.Data.Migrations
 
                     b.HasIndex("UsedParametersId");
 
-                    b.ToTable("SessionSegment");
+                    b.ToTable("SessionSegment", (string)null);
                 });
 
             modelBuilder.Entity("NeuroEstimulator.Domain.Entities.AccountProfile", b =>
@@ -348,7 +358,23 @@ namespace NeuroEstimulator.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("NeuroEstimulator.Domain.Entities.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("NeuroEstimulator.Domain.Entities.Account", "Therapist")
+                        .WithMany()
+                        .HasForeignKey("TherapistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Parameters");
+
+                    b.Navigation("Patient");
+
+                    b.Navigation("Therapist");
                 });
 
             modelBuilder.Entity("NeuroEstimulator.Domain.Entities.SessionPhoto", b =>
@@ -356,7 +382,7 @@ namespace NeuroEstimulator.Data.Migrations
                     b.HasOne("NeuroEstimulator.Domain.Entities.Session", "Session")
                         .WithMany("Photos")
                         .HasForeignKey("SessionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Session");
@@ -367,7 +393,7 @@ namespace NeuroEstimulator.Data.Migrations
                     b.HasOne("NeuroEstimulator.Domain.Entities.Session", "Session")
                         .WithMany("Segments")
                         .HasForeignKey("SessionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("NeuroEstimulator.Domain.Entities.SessionParameters", "UsedParameters")
