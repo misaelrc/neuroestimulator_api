@@ -23,6 +23,23 @@ public class DatabaseContext : DbContext, IDatabaseContext
     public DbSet<SessionPhoto> SessionPhoto { get; set; }
     public DbSet<SessionSegment> SessionSegment { get; set; }
 
+    public DbSet<AccountProfile> AccountProfile { get; set; }
+
+    public DbSet<Patient> Patient { get; set; }
+
+    public DbSet<Profile> Profile { get; set; }
+
+    public DbSet<Session> Session { get; set; }
+
+    public DbSet<SessionParameters> SessionParameters { get; set; }
+
+    public DbSet<SessionPhoto> SessionPhoto { get; set; }
+
+    public DbSet<SessionSegment> SessionSegment { get; set; }
+
+
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
