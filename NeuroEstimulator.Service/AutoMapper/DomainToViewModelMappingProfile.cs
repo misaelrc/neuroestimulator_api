@@ -9,5 +9,6 @@ public class DomainToViewModelMappingProfile : Profile
     {
         CreateMap<NeuroEstimulator.Domain.Entities.Account, AccountViewModel>();
         CreateMap<NeuroEstimulator.Domain.Entities.Profile, ProfileViewModel>();
+
     }
 }
