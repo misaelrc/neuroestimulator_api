@@ -11,9 +11,12 @@ public class Account : AuditEntity<Guid>
         SetId(Guid.NewGuid());
         this.Login = login;
         this.Name = name;
+        this.Password = password;
     }
 
     public string Login { get; private set; }
     public string Name { get; private set; }
     public string Password { get; private set; }
+
+    public void SetPassword(string password) => Password = password;
 }

@@ -10,6 +10,16 @@ namespace NeuroEstimulator.API.Controllers
     [ApiController]
     public class TesteController : ApiBaseController
     {
+        #region Fields
+        #endregion
+
+        #region Constructor
+        #endregion
+
+        #region Controller Methods
+        #endregion
+
+
         public TesteController(IApiContext apiContext) : base(apiContext)
         {
         }

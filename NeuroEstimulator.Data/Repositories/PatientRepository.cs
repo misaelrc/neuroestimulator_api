@@ -15,5 +15,4 @@ public class PatientRepository : RepositoryBase<Patient>, IPatientRepository
 {
     public PatientRepository(IDbFactory dbFactory, IApiContext apiContext) 
         : base(dbFactory, apiContext) { }
-
 }

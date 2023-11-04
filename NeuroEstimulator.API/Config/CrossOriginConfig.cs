@@ -13,7 +13,7 @@ public static class CrossOriginConfig
             throw new ArgumentNullException(nameof(services));
         }
 
-        var allowOrigins = JsonConvert.DeserializeObject<string[]>(configuration.GetValue<string>("NeuroEstimulatorService:Cors:AllowOrigins"));
+        //var allowOrigins = JsonConvert.DeserializeObject<string[]>(configuration.GetValue<string>("NeuroEstimulatorService:Cors:AllowOrigins"));
 
         services.AddCors(options =>
         {
