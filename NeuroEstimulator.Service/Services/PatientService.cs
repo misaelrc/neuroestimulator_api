@@ -67,4 +67,11 @@ public class PatientService : ServiceBase, IPatientService
         var model = _mapper.Map<List<PatientViewModel>>(result);
         return model;
     }
+
+    public Patient GetPatientById(Guid id)
+    {
+        var result = Task.Run(() => _patientRepository.GetAsync(x => x.Id == id, includeProperties: "Account")).Result;
+        var patient = result.FirstOrDefault();
+        return patient;
+    }
 }

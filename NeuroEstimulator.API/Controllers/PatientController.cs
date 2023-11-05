@@ -63,6 +63,17 @@ namespace NeuroEstimulator.API.Controllers
             return response;
         }
 
+        // <summary>
+        /// Obtém paciente por Id
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        //[ProducesDefaultResponseType(typeof(ApiResponse<AuthorizationViewModel>))]
+        public IActionResult GetPatientById(Guid id)
+        {
+            var response = this.ServiceInvoke(_patientService.GetPatientById, id);
+            return response;
+        }
 
         #endregion
     }

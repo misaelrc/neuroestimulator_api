@@ -4,6 +4,7 @@ using NeuroEstimulator.Domain.Entities;
 using NeuroEstimulator.Domain.Enumerators;
 using NeuroEstimulator.Domain.Payloads;
 using NeuroEstimulator.Domain.ViewModels;
+using NeuroEstimulator.Framework.Database.EfCore.Interface;
 using NeuroEstimulator.Framework.Exceptions;
 using NeuroEstimulator.Framework.Interfaces;
 using NeuroEstimulator.Framework.Services;
@@ -24,7 +25,10 @@ public class AccountService : ServiceBase, IAccountService
 
     private readonly IJwtUtil _jwtUtil;
     private readonly IAccountRepository _accountRepository;
+    private readonly IProfileRepository _profileRepository;
+    private readonly IAccountProfileRepository _accountProfileRepository;
     private readonly IAccountProfileService _accountProfileService;
+    private readonly IUnitOfWork _unitOfWork;
 
     #endregion
 
@@ -35,6 +39,9 @@ public class AccountService : ServiceBase, IAccountService
         , IConfiguration configuration
         , IJwtUtil jwtUtil
         , IAccountRepository accountRepository
+        , IProfileRepository profileRepository
+        , IAccountProfileRepository accountProfileRepository
+        , IUnitOfWork unitOfWork
         , IAccountProfileService accountProfileService)
         : base(apiContext)
     {
@@ -42,12 +49,31 @@ public class AccountService : ServiceBase, IAccountService
         _configuration = configuration;
         _jwtUtil = jwtUtil;
         _accountRepository = accountRepository;
+        _profileRepository = profileRepository;
+        _accountProfileRepository = accountProfileRepository;
+        _unitOfWork = unitOfWork;
         _accountProfileService = accountProfileService;
     }
 
     #endregion
 
     #region Methods
+
+    public bool CreateTherapist(CreateTherapistPayload payload)
+    {
+        string standardPassword = Encrypt("senha");
+        var account = new Account(payload.Login, payload.Name, standardPassword);
+        account.Activate();
+
+
+        var profile = Task.Run(() => _profileRepository.GetAsync(x => x.Code == "neura_therapist")).Result.First();
+        _accountProfileRepository.Add(new AccountProfile(account, profile));
+
+        var result = Task.Run(() => _unitOfWork.CommitAsync()).Result;
+
+        // se não der certo, lançar exception
+        return result;
+    }
 
     public AuthorizationViewModel Authorization(AuthorizationPayload payload)
     {

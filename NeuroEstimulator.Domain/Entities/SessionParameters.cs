@@ -4,9 +4,16 @@ namespace NeuroEstimulator.Domain.Entities;
 
 public class SessionParameters : AuditEntity<Guid>
 {
-    SessionParameters()
+    SessionParameters() { }
+
+    public SessionParameters(double amplitude, double frequency, double pulseWidth, double pulseDuration, double difficulty)
     {
         SetId(Guid.NewGuid());
+        Amplitude = amplitude;
+        Frequency = frequency;
+        PulseWidth = pulseWidth;
+        PulseDuration = pulseDuration;
+        Difficulty = difficulty;
     }
 
     public double Amplitude {get; private set; }

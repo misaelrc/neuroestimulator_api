@@ -8,4 +8,5 @@ public interface IAccountService
     AuthorizationViewModel Authorization(AuthorizationPayload payload);
     AuthorizationViewModel RefreshToken();
     string Encrypt(string toEncrypt);
+    bool CreateTherapist(CreateTherapistPayload payload);
 }

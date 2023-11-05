@@ -12,5 +12,7 @@ public class DomainToViewModelMappingProfile : Profile
         CreateMap<NeuroEstimulator.Domain.Entities.Patient, PatientViewModel>()
             .ForMember(pvm => pvm.Name, opt => opt.MapFrom(p => p.Account.Name));
 
+        CreateMap<NeuroEstimulator.Domain.Entities.Session, SessionViewModel>();
+
     }
 }
