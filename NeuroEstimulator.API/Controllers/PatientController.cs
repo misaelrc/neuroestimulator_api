@@ -37,32 +37,7 @@ namespace NeuroEstimulator.API.Controllers
 
         #region Controller Methods
 
-        /// <summary>
-        /// Realiza a autorização (login) de uma conta de usuárioo
-        /// </summary>
-        /// <param name="payload"></param>
-        /// <returns></returns>
-        [Route("Create")]
-        [HttpPost]
-        //[ProducesDefaultResponseType(typeof(ApiResponse<AuthorizationViewModel>))]
-        public IActionResult CreatePatient(CreatePatientPayload payload)
-        {
-            var response = this.ServiceInvoke(_patientService.CreatePatient, payload);
-            return response;
-        }
-
-        // <summary>
-        /// Lista todos os pacientes
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        //[ProducesDefaultResponseType(typeof(ApiResponse<AuthorizationViewModel>))]
-        public IActionResult GetAllPatients()
-        {
-            var response = this.ServiceInvoke(_patientService.GetAllPatients);
-            return response;
-        }
-
+        
         // <summary>
         /// Obtém paciente por Id
         /// </summary>
@@ -75,6 +50,29 @@ namespace NeuroEstimulator.API.Controllers
             return response;
         }
 
+        // <summary>
+        /// Obtém parâmetros setados para o paciente
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("{id}/Parameters")]
+        //[ProducesDefaultResponseType(typeof(ApiResponse<AuthorizationViewModel>))]
+        public IActionResult GetParameters(Guid id)
+        {
+            var response = this.ServiceInvoke(_patientService.GetPatientById, id);
+            return response;
+        }
+
+        // <summary>
+        /// Setar paramêtros para o paciente
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("{id}/Parameters")]
+        //[ProducesDefaultResponseType(typeof(ApiResponse<AuthorizationViewModel>))]
+        public IActionResult SetParameters(Guid id)
+        {
+            var response = this.ServiceInvoke(_patientService.GetPatientById, id);
+            return response;
+        }
         #endregion
     }
 }

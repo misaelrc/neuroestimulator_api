@@ -19,4 +19,7 @@ public class Account : AuditEntity<Guid>
     public string Password { get; private set; }
 
     public void SetPassword(string password) => Password = password;
+
+    public void SetName(string name) => Name = name;
+    public void SetLogin(string login) => Login = login;
 }

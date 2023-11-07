@@ -5,4 +5,5 @@ namespace NeuroEstimulator.Data.Interfaces;
 
 public interface IPatientRepository : IRepositoryBase<Patient>
 {
+    Task<Patient?> GetByIdAsync(Guid id);
 }

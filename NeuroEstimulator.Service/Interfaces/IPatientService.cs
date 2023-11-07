@@ -7,6 +7,10 @@ namespace NeuroEstimulator.Service.Interfaces;
 public interface IPatientService
 {
     bool CreatePatient(CreatePatientPayload payload);
-    IList<PatientViewModel> GetAllPatients();
-    Patient GetPatientById(Guid id);
+    bool EditPatient(EditPatientPayload payload);
+    bool DeletePatient(Guid id);
+    bool AllowSessions(Guid id);
+    bool DisallowSessions(Guid id);
+    IList<ListPatientViewModel> GetAllPatients();
+    PatientViewModel GetPatientById(Guid id);
 }

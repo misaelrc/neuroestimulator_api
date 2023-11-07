@@ -36,12 +36,7 @@ namespace NeuroEstimulator.API.Controllers
             return response;
         }
 
-        [HttpPost("Create")]
-        public IActionResult CreateSession(CreateSessionPayload payload)
-        {
-            var response = this.ServiceInvoke(_sessionService.CreateSession, payload);
-            return response;
-        }
+
 
         [HttpPost("Start")]
         public IActionResult StartSession(WristAmplitudePayload payload)

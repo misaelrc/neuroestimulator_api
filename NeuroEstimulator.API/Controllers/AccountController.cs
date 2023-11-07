@@ -7,6 +7,7 @@ using NeuroEstimulator.Framework.Interfaces;
 using NeuroEstimulator.Framework.Result;
 using NeuroEstimulator.Framework.Security.Authorization;
 using NeuroEstimulator.Service.Interfaces;
+using NeuroEstimulator.Service.Services;
 
 namespace NeuroEstimulator.API.Controllers
 {
@@ -73,6 +74,19 @@ namespace NeuroEstimulator.API.Controllers
         public IActionResult Encrypt([FromBody]string pass)
         {
             var response = this.ServiceInvoke(_accountService.Encrypt,pass);
+            return response;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="payload"></param>
+        /// <returns></returns>
+        [Route("CreateTherapist")]
+        [HttpPost]
+        //[ProducesDefaultResponseType(typeof(ApiResponse<AuthorizationViewModel>))]
+        public IActionResult CreateTherapist(CreateTherapistPayload payload)
+        {
+            var response = this.ServiceInvoke(_accountService.CreateTherapist, payload);
             return response;
         }
         #endregion

@@ -1,14 +1,14 @@
-﻿namespace NeuroEstimulator.Domain.ViewModels;
+﻿namespace NeuroEstimulator.Domain.Payloads;
 
-public class PatientViewModel
+public class EditPatientPayload
 {
-    public PatientViewModel() { }
-
     public Guid Id { get; set; }
+    public string Login { get; set; }
     public string Name { get; set; }
-    public DateTime BirthDate { get; private set; }
     public string Email { get; set; }
     public string Phone { get; set; }
+
+    public DateTime BirthDate { get; set; }
 
     public string? CaretakerName { get; set; }
     public string? CaretakerPhone { get; set; }
