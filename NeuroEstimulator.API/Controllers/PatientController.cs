@@ -68,7 +68,7 @@ namespace NeuroEstimulator.API.Controllers
         /// <returns></returns>
         [HttpPost("{id}/Parameters")]
         //[ProducesDefaultResponseType(typeof(ApiResponse<AuthorizationViewModel>))]
-        public IActionResult SetParameters(SessionParametersPayload payload)
+        public IActionResult SetParameters(SetPatientParametersPayload payload)
         {
             var response = this.ServiceInvoke(_patientService.SetParameters, payload);
             return response;

@@ -27,6 +27,7 @@ public class Patient : AuditEntity<Guid>
     public Guid? ParametersId { get; private set; }
     public DateTime BirthDate { get; private set; }
     public bool SessionAllowed { get; private set; }
+    public int? Repetitions { get; private set; }
 
     public string? CaretakerName { get; set; }
     public string? CaretakerPhone { get; set; }
@@ -50,6 +51,7 @@ public class Patient : AuditEntity<Guid>
     }
 
     public void SetParameters(SessionParameters parameters) => Parameters = parameters;
+    public void SetRepetitions(int? repetitions) => Repetitions = repetitions;
     public void AllowSessions() => SessionAllowed = true;
     public void DisallowSessions() => SessionAllowed = false;
 }

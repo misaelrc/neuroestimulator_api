@@ -14,6 +14,6 @@ public interface IPatientService
     IList<ListPatientViewModel> GetAllPatients();
     PatientViewModel GetPatientById(Guid id);
 
-    bool SetParameters(SessionParametersPayload payload);
+    bool SetParameters(SetPatientParametersPayload payload);
     SessionParameters GetParameters(Guid Id);
 }

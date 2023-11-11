@@ -161,7 +161,7 @@ public class PatientService : ServiceBase, IPatientService
         return result;
     }
 
-    public bool SetParameters(SessionParametersPayload payload)
+    public bool SetParameters(SetPatientParametersPayload payload)
     {
         var patient = Task.Run(() => _patientRepository.GetByIdAsync(payload.PatientId)).Result;
         if (patient is null)
@@ -182,6 +182,7 @@ public class PatientService : ServiceBase, IPatientService
             parameters.SetMinPulseWidth(payload.MinPulseWidth);
             parameters.SetStimulationTime(payload.StimulationTime);
         }
+        patient.SetRepetitions(payload.Repetitions);
         
         _patientRepository.Update(patient);
         
