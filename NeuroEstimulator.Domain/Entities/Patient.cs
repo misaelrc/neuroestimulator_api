@@ -7,7 +7,7 @@ public class Patient : AuditEntity<Guid>
 {
     public Patient() { }
 
-    public Patient(string email, string phone, DateTime birthDate, Account account, string? caretakerName = null, string? caretakerPhone = null)
+    public Patient(Guid therapistId, string email, string phone, DateTime birthDate, Account account, string? caretakerName = null, string? caretakerPhone = null)
     {
         SetId(Guid.NewGuid());
         this.Email = email;
@@ -16,20 +16,23 @@ public class Patient : AuditEntity<Guid>
         this.Account = account;
         this.CaretakerName = caretakerName;
         this.CaretakerPhone = caretakerPhone;
+        this.TherapistId = therapistId;
         Activate();
     }
     public string Email { get; set; }
     public string Phone { get; set; }
 
     public Guid AccountId { get; private set; }
-    public Guid ParametersId { get; private set; }
+    public Guid TherapistId { get; private set; }
+    public Guid? ParametersId { get; private set; }
     public DateTime BirthDate { get; private set; }
     public bool SessionAllowed { get; private set; }
 
     public string? CaretakerName { get; set; }
     public string? CaretakerPhone { get; set; }
     public virtual Account Account { get; private set; }
-    public virtual SessionParameters Parameters { get; private set; }
+    public virtual Account Therapist { get; private set; }
+    public virtual SessionParameters? Parameters { get; private set; }
 
 
     [NotMapped]

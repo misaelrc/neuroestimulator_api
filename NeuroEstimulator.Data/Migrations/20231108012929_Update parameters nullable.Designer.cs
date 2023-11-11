@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NeuroEstimulator.Data.Context;
 
@@ -11,9 +12,11 @@ using NeuroEstimulator.Data.Context;
 namespace NeuroEstimulator.Data.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20231108012929_Update parameters nullable")]
+    partial class Updateparametersnullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -273,13 +276,7 @@ namespace NeuroEstimulator.Data.Migrations
                     b.Property<double>("Frequency")
                         .HasColumnType("float");
 
-                    b.Property<double?>("MaxPulseWidth")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("MinPulseWidth")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("PulseWidth")
+                    b.Property<double>("PulseWidth")
                         .HasColumnType("float");
 
                     b.Property<double>("StimulationTime")

@@ -2,9 +2,11 @@
 using NeuroEstimulator.Data.Interfaces;
 using NeuroEstimulator.Data.Repositories;
 using NeuroEstimulator.Domain.Entities;
+using NeuroEstimulator.Domain.Enumerators;
 using NeuroEstimulator.Domain.Payloads;
 using NeuroEstimulator.Domain.ViewModels;
 using NeuroEstimulator.Framework.Database.EfCore.Interface;
+using NeuroEstimulator.Framework.Exceptions;
 using NeuroEstimulator.Framework.Interfaces;
 using NeuroEstimulator.Framework.Services;
 using NeuroEstimulator.Service.Interfaces;
@@ -15,24 +17,42 @@ public class SessionService : ServiceBase, ISessionService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ISessionRepository _sessionRepository;
+    private readonly ISessionSegmentRepository _sessionSegmentRepository;
+    private readonly ISessionPhotoRepository _sessionPhotoRepository;
+    private readonly IPatientRepository _patientRepository;
     private readonly IMapper _mapper;
+    private readonly FileService _fileService;
 
     public SessionService(
         IApiContext apiContext,
         IUnitOfWork unitOfWork,
         ISessionRepository sessionRepository,
-        IMapper mapper)
+        ISessionSegmentRepository sessionSegmentRepository,
+        ISessionPhotoRepository sessionPhotoRepository,
+        IPatientRepository patientRepository,
+        IMapper mapper,
+        FileService fileService)
         : base(apiContext)
     {
         _mapper = mapper;
         _sessionRepository = sessionRepository;
+        _sessionSegmentRepository = sessionSegmentRepository;
+        _sessionPhotoRepository = sessionPhotoRepository;
+        _patientRepository = patientRepository;
         _unitOfWork = unitOfWork;
+        _fileService = fileService;
     }
     
     public bool CreateSession(CreateSessionPayload payload)
     {
-        var parameters = new SessionParameters(payload.Amplitude, payload.Frequency, payload.PulseWidth, payload.PulseDuration, payload.Difficulty);
-        var session = new Session(payload.TherapistId, payload.PatientId, payload.SessionDuration, parameters);
+        var patient = Task.Run(() => _patientRepository.GetByIdAsync(payload.PatientId)).Result;
+        if (patient is null) throw new BadRequestException(PatientErrors.PatientNotFound);
+        
+        var parameters = patient.Parameters;
+        if(parameters is null) throw new BadRequestException(PatientErrors.PatientWithoutParameters);
+
+        // You can consider the last 2 properties as null if you dont need them
+        var session = new Session(patient.TherapistId, payload.PatientId, parameters , payload.SessionDuration, payload.Repetitions);
 
         _sessionRepository.Add(session);
 
@@ -40,10 +60,22 @@ public class SessionService : ServiceBase, ISessionService
         return result;
     }
 
+    public bool AddSessionSegment(SessionSegmentPayload payload)
+    {
+        var session = Task.Run(() => _sessionRepository.GetAsync(s => s.Id == payload.SessionId)).Result.FirstOrDefault();
+
+        var parameters = new SessionParameters(payload.Amplitude, payload.Frequency, payload.PulseWidth, payload.StimulationTime);
+        var segment = new SessionSegment(payload.Difficulty, payload.Intensity, parameters);
+
+        _sessionSegmentRepository.Add(segment);
+        var result = Task.Run(() => _unitOfWork.CommitAsync()).Result;
+        return result;
+    }
+
     public void SetParameters(Guid sessionId, SessionParametersPayload payload)
     {
         var session = Task.Run(() => _sessionRepository.GetAsync(s => s.Id == sessionId, includeProperties: "Parameters")).Result.FirstOrDefault();
-        var parameters = new SessionParameters(payload.Amplitude, payload.Frequency, payload.PulseWidth, payload.PulseDuration, payload.Difficulty);
+        var parameters = new SessionParameters(payload.Amplitude, payload.Frequency, payload.StimulationTime, payload.MaxPulseWidth, payload.MinPulseWidth);
         session.SetParameters(parameters);
 
         Task.Run(() => _unitOfWork.CommitAsync());
@@ -73,9 +105,17 @@ public class SessionService : ServiceBase, ISessionService
         return result;
     }
 
-    public void AddPhoto(Guid sessionId, SessionPhoto photo)
+    public bool AddPhoto(SessionPhotoPayload payload)
     {
-        throw new NotImplementedException();
+        //adicionar a foto no store
+        var blob = Task.Run(() =>
+            _fileService.UploadAsync(payload.file, payload.SessionId.ToString() + $"{DateTime.Now:yyyyMMddTHHmmss}")
+        ).Result;
+
+        _sessionPhotoRepository.Add(new SessionPhoto(payload.SessionId, blob.Item1));
+     
+        var result = Task.Run(() => _unitOfWork.CommitAsync()).Result;
+        return result;
     }
 
     public Session GetSessionById(Guid sessionId) {
@@ -89,19 +129,19 @@ public class SessionService : ServiceBase, ISessionService
         return model;
     }
 
-    public SessionSegment GetCurrentSessionSegment(Guid sessionId)
+    public IList<SessionPhotoViewModel> GetPhotos(Guid sessionId)
     {
-        throw new NotImplementedException();
+        var result = Task.Run(() => _sessionPhotoRepository.GetAsync(x => x.SessionId == sessionId)).Result;
+
+        var model = _mapper.Map<List<SessionPhotoViewModel>>(result);
+        return model;
     }
 
-    public IList<SessionPhoto> GetPhotos(Guid sessionId)
+    public IList<ListSessionViewModel> GetSessionsByPatientId(Guid patientId)
     {
-        throw new NotImplementedException();
+        var result = Task.Run(() => _sessionRepository.GetAsync(x => x.PatientId == patientId)).Result;
+
+        var model = _mapper.Map<List<ListSessionViewModel>>(result);
+        return model;
     }
-
-
-
-    
-
-    
 }

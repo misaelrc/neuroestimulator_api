@@ -45,15 +45,13 @@ public class PatientService : ServiceBase, IPatientService
         _mapper = mapper;
     }
 
-    
-
-    public bool CreatePatient(CreatePatientPayload payload)
+    public PatientViewModel CreatePatient(CreatePatientPayload payload)
     {
         string standardPassword = _accountService.Encrypt("senha");
         var account = new Account(payload.Login, payload.Name, standardPassword);
         account.Activate();
 
-        var patient = new Patient(payload.Email, payload.Phone, payload.BirthDate, account, payload.CaretakerName, payload.CaretakerPhone);
+        var patient = new Patient(payload.TherapistId, payload.Email, payload.Phone, payload.BirthDate, account, payload.CaretakerName, payload.CaretakerPhone);
 
         var profile = Task.Run(() => _profileRepository.GetAsync(x => x.Code == "neura_patient")).Result.First();
         _accountProfileRepository.Add(new AccountProfile(account, profile));
@@ -61,11 +59,18 @@ public class PatientService : ServiceBase, IPatientService
 
         var result = Task.Run(() => _unitOfWork.CommitAsync()).Result;
 
-        // se não der certo, lançar exception
-        return result;
+        if (result)
+        {
+            var model = _mapper.Map<PatientViewModel>(patient);
+            return model;
+        }
+        else
+        {
+            throw new InternalException(PatientErrors.ErrorOnCreatePatient);
+        }
     }
 
-    public bool EditPatient(EditPatientPayload payload)
+    public PatientViewModel EditPatient(EditPatientPayload payload)
     {
         var patient = Task.Run(() => _patientRepository.GetByIdAsync(payload.Id)).Result;
         if (patient is null)
@@ -77,11 +82,22 @@ public class PatientService : ServiceBase, IPatientService
 
         _mapper.Map(payload, patient);
 
+        _patientRepository.Update(patient);
+
 
         var result = Task.Run(() => _unitOfWork.CommitAsync()).Result;
 
-        return result;
+        if (result)
+        {
+            var model = _mapper.Map<PatientViewModel>(patient);
+            return model;
+        }
+        else
+        {
+            throw new InternalException(PatientErrors.ErrorOnEditPatient);
+        }
     }
+
     public bool DeletePatient(Guid id)
     {
         var patient = Task.Run(() => _patientRepository.GetByIdAsync(id)).Result;
@@ -143,5 +159,45 @@ public class PatientService : ServiceBase, IPatientService
         _patientRepository.Update(patient);
         var result = Task.Run(() => _unitOfWork.CommitAsync()).Result;
         return result;
+    }
+
+    public bool SetParameters(SessionParametersPayload payload)
+    {
+        var patient = Task.Run(() => _patientRepository.GetByIdAsync(payload.PatientId)).Result;
+        if (patient is null)
+        {
+            throw new BadRequestException(PatientErrors.PatientNotFound);
+        }
+        var parameters = patient.Parameters;
+        if(parameters is null)
+        {
+            parameters = new SessionParameters(payload.Amplitude, payload.Frequency, payload.StimulationTime, payload.MaxPulseWidth, payload.MinPulseWidth); 
+            patient.SetParameters(parameters);
+        }
+        else
+        {
+            parameters.SetAmplitude(payload.Amplitude);
+            parameters.SetFrequency(payload.Frequency);
+            parameters.SetMaxPulseWidth(payload.MaxPulseWidth);
+            parameters.SetMinPulseWidth(payload.MinPulseWidth);
+            parameters.SetStimulationTime(payload.StimulationTime);
+        }
+        
+        _patientRepository.Update(patient);
+        
+        var result = Task.Run(() => _unitOfWork.CommitAsync()).Result;
+        return result;
+    }
+
+    public SessionParameters GetParameters(Guid id)
+    {
+        var patient = Task.Run(() => _patientRepository.GetByIdAsync(id)).Result;
+        if (patient is null) throw new BadRequestException(PatientErrors.PatientNotFound);
+
+        var parameters = patient.Parameters;
+        if (parameters is null) throw new BadRequestException(PatientErrors.PatientWithoutParameters);
+
+
+        return parameters;
     }
 }

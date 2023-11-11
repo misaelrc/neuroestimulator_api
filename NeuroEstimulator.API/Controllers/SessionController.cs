@@ -36,7 +36,19 @@ namespace NeuroEstimulator.API.Controllers
             return response;
         }
 
+        [HttpGet("/patient/{id}")]
+        public IActionResult GetSessionsByPatientId(Guid patientId)
+        {
+            var response = this.ServiceInvoke(_sessionService.GetSessionsByPatientId, patientId);
+            return response;
+        }
 
+        [HttpPost("CreateSession")]
+        public IActionResult CreateSession(CreateSessionPayload payload)
+        {
+            var response = this.ServiceInvoke(_sessionService.CreateSession, payload);
+            return response;
+        }
 
         [HttpPost("Start")]
         public IActionResult StartSession(WristAmplitudePayload payload)
@@ -53,9 +65,30 @@ namespace NeuroEstimulator.API.Controllers
         }
 
         [HttpGet("Parameters/{id}")]
-        public IActionResult FinishSession(Guid id)
+        public IActionResult GetParameters(Guid id)
         {
             var response = this.ServiceInvoke(_sessionService.GetParameters, id);
+            return response;
+        }
+
+        [HttpGet("SendUsedParameters")]
+        public IActionResult SendUsedParameters(SessionSegmentPayload payload)
+        {
+            var response = this.ServiceInvoke(_sessionService.AddSessionSegment, payload);
+            return response;
+        }
+
+        [HttpGet("UploadPhotos")]
+        public IActionResult UploadPhotos(SessionPhotoPayload payload)
+        {
+            var response = this.ServiceInvoke(_sessionService.AddPhoto, payload);
+            return response;
+        }
+
+        [HttpGet("Photos/{sessionId}")]
+        public IActionResult GetPhotos(Guid sessionId)
+        {
+            var response = this.ServiceInvoke(_sessionService.GetPhotos, sessionId);
             return response;
         }
         #endregion

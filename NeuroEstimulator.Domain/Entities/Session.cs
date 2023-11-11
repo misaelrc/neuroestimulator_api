@@ -11,13 +11,15 @@ public class Session : AuditEntity<Guid>
         
     }
 
-    public Session(Guid therapistId, Guid patientId, int sessionDuraton, SessionParameters parameters)
+    public Session(Guid therapistId, Guid patientId, SessionParameters parameters, int? sessionDuraton = null, int? repetitions = null)
     { 
         SetId(Guid.NewGuid());
         TherapistId = therapistId;
         PatientId = patientId;
         SessionDuration = sessionDuraton;
         Parameters = parameters;
+        Repetitions = repetitions;
+        Status = SessionStatusEnum.NotStarted;
     }
 
     public Guid TherapistId { get; private set; }
@@ -25,10 +27,11 @@ public class Session : AuditEntity<Guid>
     public Guid ParametersId { get; private set; }
     public double? StartWristAmplitudeMeasurement { get; private set; }
     public double? FinishWristAmplitudeMeasurement { get; private set; }
-    public int SessionDuration { get; private set; }
+    public int? SessionDuration { get; private set; }
+    public int? Repetitions { get; private set; }
     public DateTime? StartedAt { get; private set; }
     public DateTime? FinishedAt { get; private set; }
-
+    public SessionStatusEnum Status { get; private set; }
 
     public virtual Account Therapist { get; private set; }
     public virtual Patient Patient { get; private set; }
@@ -36,18 +39,25 @@ public class Session : AuditEntity<Guid>
     public virtual ICollection<SessionSegment> Segments { get; private set; } = new List<SessionSegment>();
     public virtual ICollection<SessionPhoto> Photos { get; private set; } = new List<SessionPhoto>();
 
-    
-
     public void SetParameters(SessionParameters parameters) => Parameters = parameters;
     public void Start(double wristAmplitude)
     {
         StartedAt = DateTime.Now;
         StartWristAmplitudeMeasurement = wristAmplitude;
+        Status = SessionStatusEnum.OnGoing;
     }
     public void Finish(double wristAmplitude)
     {
         FinishedAt = DateTime.Now;
         FinishWristAmplitudeMeasurement = wristAmplitude;
+        Status = SessionStatusEnum.Finished;
     }
+
+    public void Interrupt()
+    {
+        FinishedAt = DateTime.Now;
+        Status = SessionStatusEnum.Interrupted;
+    }
+
     public void AddPhoto(SessionPhoto photo) => Photos.Add(photo);
 }

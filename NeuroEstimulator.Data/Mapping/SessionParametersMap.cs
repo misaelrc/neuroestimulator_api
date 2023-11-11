@@ -18,9 +18,6 @@ public class SessionParametersMap : BaseAuditEntityMap<SessionParameters, Guid>
         builder
             .Property(b => b.Frequency)
             .IsRequired();
-
-        builder
-            .Property(b => b.PulseWidth)
-            .IsRequired();
+            
     }
 }

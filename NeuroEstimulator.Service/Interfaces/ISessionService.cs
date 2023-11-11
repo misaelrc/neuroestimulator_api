@@ -7,13 +7,15 @@ namespace NeuroEstimulator.Service.Interfaces;
 public interface ISessionService 
 {
     Session GetSessionById(Guid sessionId);
-    bool CreateSession(CreateSessionPayload payload);
+    bool CreateSession(CreateSessionPayload payload); 
+    bool AddSessionSegment(SessionSegmentPayload payload);
     void SetParameters(Guid sessionId, SessionParametersPayload parameters);
     SessionParameters GetParameters(Guid sessionId);
     bool Start(WristAmplitudePayload payload);
     bool Finish(WristAmplitudePayload payload);
-    void AddPhoto(Guid sessionId, SessionPhoto photo);
+    bool AddPhoto(SessionPhotoPayload payload);
     IList<SessionViewModel> GetSessionsByPatient(Guid patientId);
-    SessionSegment GetCurrentSessionSegment(Guid sessionId);
-    IList<SessionPhoto> GetPhotos(Guid sessionId);
+    IList<SessionPhotoViewModel> GetPhotos(Guid sessionId);
+
+    IList<ListSessionViewModel> GetSessionsByPatientId(Guid patientId);
 }

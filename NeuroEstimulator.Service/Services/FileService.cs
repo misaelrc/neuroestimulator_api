@@ -18,7 +18,7 @@ public class FileService
         _filesContainer = blobServiceClient.GetBlobContainerClient("files");
     }
 
-    public async Task UploadAsync(IFormFile blob)
+    public async Task<Tuple<string, string>> UploadAsync(IFormFile blob, string name)
     {
         BlobClient client = _filesContainer.GetBlobClient(blob.Name);
 
@@ -26,6 +26,8 @@ public class FileService
         {
             await client.UploadAsync(data);
         }
+
+        return new Tuple<string, string>(client.Uri.AbsoluteUri, client.Name);
 
     }
 

@@ -33,6 +33,7 @@ public class NativeInjectorBootStrapper
         services.AddScoped<ISessionPhotoService, SessionPhotoService>();
         services.AddScoped<ISessionSegmentService, SessionSegmentService>();
         services.AddScoped<ISessionService, SessionService>();
+        services.AddSingleton<FileService>();
     }
 
     public static void AddDatabase(IServiceCollection services)

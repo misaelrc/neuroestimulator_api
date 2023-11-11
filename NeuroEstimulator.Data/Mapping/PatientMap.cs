@@ -16,6 +16,14 @@ public class PatientMap : BaseAuditEntityMap<Patient, Guid>
             .IsRequired();
 
         builder
+            .Property(b => b.ParametersId)
+            .IsRequired(false);
+
+        builder
+            .Property(b => b.TherapistId)
+            .IsRequired();
+
+        builder
             .Property(b => b.BirthDate)
             .HasColumnType("date")
             .IsRequired();
@@ -25,5 +33,13 @@ public class PatientMap : BaseAuditEntityMap<Patient, Guid>
             .HasDefaultValue(false);
 
         builder.HasOne(x => x.Account);
+        builder.HasOne(x => x.Parameters);
+        builder.HasOne(x => x.Therapist);
+
+        builder
+            .HasOne(x => x.Therapist)
+            .WithMany()
+            .HasForeignKey(x => x.TherapistId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NeuroEstimulator.Domain.Payloads;
+using NeuroEstimulator.Domain.ViewModels;
 using NeuroEstimulator.Framework.Controllers;
 using NeuroEstimulator.Framework.Interfaces;
+using NeuroEstimulator.Framework.Result;
 using NeuroEstimulator.Service.Interfaces;
 using NeuroEstimulator.Service.Services;
 
@@ -50,24 +52,12 @@ namespace NeuroEstimulator.API.Controllers
             return response;
         }
 
-        /// <summary>
-        /// Creates a session
-        /// </summary>
-        /// <param name="payload"></param>
-        /// <returns></returns>
-        [HttpPost("CreateSession")]
-        public IActionResult CreateSession(CreateSessionPayload payload)
-        {
-            var response = this.ServiceInvoke(_sessionService.CreateSession, payload);
-            return response;
-        }
-
         // <summary>
         /// Lista todos os pacientes
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetPatients")]
-        //[ProducesDefaultResponseType(typeof(ApiResponse<AuthorizationViewModel>))]
+        [ProducesDefaultResponseType(typeof(ApiResponse<List<ListPatientViewModel>>))]
         public IActionResult GetAllPatients()
         {
             var response = this.ServiceInvoke(_patientService.GetAllPatients);

@@ -19,21 +19,21 @@ public class SessionSegmentMap : BaseAuditEntityMap<SessionSegment, Guid>
             .Property(b => b.UsedParametersId)
             .IsRequired();
 
-        builder
+        /*builder
             .Property(b => b.StartedAt)
-            .IsRequired();
+            .IsRequired();*/
 
         builder
             .Property(b => b.FinishedAt)
             .IsRequired(false);
 
-        builder
+        /*builder
              .Property(b => b.Status)
              .IsRequired();
 
         builder
             .Property(b => b.WristAmplitudeMeasurement)
-            .IsRequired(false);
+            .IsRequired(false);*/
 
         builder.HasOne(x => x.UsedParameters);
         builder.HasOne(x => x.Session);

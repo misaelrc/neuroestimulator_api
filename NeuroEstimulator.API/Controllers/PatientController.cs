@@ -58,7 +58,7 @@ namespace NeuroEstimulator.API.Controllers
         //[ProducesDefaultResponseType(typeof(ApiResponse<AuthorizationViewModel>))]
         public IActionResult GetParameters(Guid id)
         {
-            var response = this.ServiceInvoke(_patientService.GetPatientById, id);
+            var response = this.ServiceInvoke(_patientService.GetParameters, id);
             return response;
         }
 
@@ -68,9 +68,9 @@ namespace NeuroEstimulator.API.Controllers
         /// <returns></returns>
         [HttpPost("{id}/Parameters")]
         //[ProducesDefaultResponseType(typeof(ApiResponse<AuthorizationViewModel>))]
-        public IActionResult SetParameters(Guid id)
+        public IActionResult SetParameters(SessionParametersPayload payload)
         {
-            var response = this.ServiceInvoke(_patientService.GetPatientById, id);
+            var response = this.ServiceInvoke(_patientService.SetParameters, payload);
             return response;
         }
         #endregion
