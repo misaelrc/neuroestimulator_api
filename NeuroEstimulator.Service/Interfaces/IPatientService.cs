@@ -9,11 +9,11 @@ public interface IPatientService
     PatientViewModel CreatePatient(CreatePatientPayload payload);
     PatientViewModel EditPatient(EditPatientPayload payload);
     bool DeletePatient(Guid id);
-    bool AllowSessions(Guid id);
-    bool DisallowSessions(Guid id);
+    PatientViewModel AllowSessions(Guid id);
+    PatientViewModel DisallowSessions(Guid id);
     IList<ListPatientViewModel> GetAllPatients();
     PatientViewModel GetPatientById(Guid id);
 
-    bool SetParameters(SetPatientParametersPayload payload);
+    PatientViewModel SetParameters(SetPatientParametersPayload payload);
     SessionParameters GetParameters(Guid Id);
 }

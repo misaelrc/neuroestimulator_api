@@ -14,5 +14,4 @@ public class SetPatientParametersPayload
     public double MaxPulseWidth { get; set; }
     public double MinPulseWidth { get; set; }
     public double StimulationTime { get; set; }
-    public int Repetitions { get; set; }
 }

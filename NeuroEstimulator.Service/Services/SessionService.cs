@@ -43,7 +43,7 @@ public class SessionService : ServiceBase, ISessionService
         _fileService = fileService;
     }
     
-    public bool CreateSession(CreateSessionPayload payload)
+    public SessionViewModel CreateSession(CreateSessionPayload payload)
     {
         var patient = Task.Run(() => _patientRepository.GetByIdAsync(payload.PatientId)).Result;
         if (patient is null) throw new BadRequestException(PatientErrors.PatientNotFound);
@@ -57,7 +57,15 @@ public class SessionService : ServiceBase, ISessionService
         _sessionRepository.Add(session);
 
         var result = Task.Run(() => _unitOfWork.CommitAsync()).Result;
-        return result;
+        if (result)
+        {
+            var model = _mapper.Map<SessionViewModel>(session);
+            return model;
+        }
+        else
+        {
+            throw new InternalException(PatientErrors.ErrorOnSetPatientParameters);
+        }
     }
 
     public bool AddSessionSegment(SessionSegmentPayload payload)

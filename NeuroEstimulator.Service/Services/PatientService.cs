@@ -22,6 +22,7 @@ public class PatientService : ServiceBase, IPatientService
     private readonly IAccountRepository _accountRepository;
     private readonly IProfileRepository _profileRepository;
     private readonly IAccountProfileRepository _accountProfileRepository;
+    private readonly ISessionParametersRepository _sessionParametersRepository;
     private readonly IAccountService _accountService;
     private readonly IMapper _mapper;
 
@@ -32,6 +33,7 @@ public class PatientService : ServiceBase, IPatientService
         IAccountRepository accountRepository,
         IProfileRepository profileRepository,
         IAccountProfileRepository accountProfileRepository,
+        ISessionParametersRepository sessionParametersRepository,
         IAccountService accountService,
         IMapper mapper) 
         : base(apiContext)
@@ -41,6 +43,7 @@ public class PatientService : ServiceBase, IPatientService
         _accountRepository = accountRepository;
         _profileRepository = profileRepository;
         _accountProfileRepository = accountProfileRepository;
+        _sessionParametersRepository = sessionParametersRepository;
         _accountService = accountService;
         _mapper = mapper;
     }
@@ -131,7 +134,7 @@ public class PatientService : ServiceBase, IPatientService
         return model;
     }
 
-    public bool AllowSessions(Guid id)
+    public PatientViewModel AllowSessions(Guid id)
     {
         var patient = Task.Run(() => _patientRepository.GetByIdAsync(id)).Result;
         if (patient is null)
@@ -143,10 +146,19 @@ public class PatientService : ServiceBase, IPatientService
 
         _patientRepository.Update(patient);
         var result = Task.Run(() => _unitOfWork.CommitAsync()).Result;
-        return result;
+
+        if (result)
+        {
+            var model = _mapper.Map<PatientViewModel>(patient);
+            return model;
+        }
+        else
+        {
+            throw new InternalException(PatientErrors.ErrorOnAllowSessions);
+        }
     }
 
-    public bool DisallowSessions(Guid id)
+    public PatientViewModel DisallowSessions(Guid id)
     {
         var patient = Task.Run(() => _patientRepository.GetByIdAsync(id)).Result;
         if (patient is null)
@@ -158,10 +170,19 @@ public class PatientService : ServiceBase, IPatientService
 
         _patientRepository.Update(patient);
         var result = Task.Run(() => _unitOfWork.CommitAsync()).Result;
-        return result;
+
+        if (result)
+        {
+            var model = _mapper.Map<PatientViewModel>(patient);
+            return model;
+        }
+        else
+        {
+            throw new InternalException(PatientErrors.ErrorOnDisallowSessions);
+        }
     }
 
-    public bool SetParameters(SetPatientParametersPayload payload)
+    public PatientViewModel SetParameters(SetPatientParametersPayload payload)
     {
         var patient = Task.Run(() => _patientRepository.GetByIdAsync(payload.PatientId)).Result;
         if (patient is null)
@@ -171,7 +192,8 @@ public class PatientService : ServiceBase, IPatientService
         var parameters = patient.Parameters;
         if(parameters is null)
         {
-            parameters = new SessionParameters(payload.Amplitude, payload.Frequency, payload.StimulationTime, payload.MaxPulseWidth, payload.MinPulseWidth); 
+            parameters = new SessionParameters(payload.Amplitude, payload.Frequency, payload.StimulationTime, payload.MaxPulseWidth, payload.MinPulseWidth);
+            _sessionParametersRepository.Add(parameters);
             patient.SetParameters(parameters);
         }
         else
@@ -182,12 +204,20 @@ public class PatientService : ServiceBase, IPatientService
             parameters.SetMinPulseWidth(payload.MinPulseWidth);
             parameters.SetStimulationTime(payload.StimulationTime);
         }
-        patient.SetRepetitions(payload.Repetitions);
         
         _patientRepository.Update(patient);
-        
+
         var result = Task.Run(() => _unitOfWork.CommitAsync()).Result;
-        return result;
+
+        if (result)
+        {
+            var model = _mapper.Map<PatientViewModel>(patient);
+            return model;
+        }
+        else
+        {
+            throw new InternalException(PatientErrors.ErrorOnSetPatientParameters);
+        }
     }
 
     public SessionParameters GetParameters(Guid id)

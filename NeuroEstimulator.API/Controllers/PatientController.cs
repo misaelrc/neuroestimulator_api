@@ -54,7 +54,7 @@ namespace NeuroEstimulator.API.Controllers
         /// Obtém parâmetros setados para o paciente
         /// </summary>
         /// <returns></returns>
-        [HttpGet("{id}/Parameters")]
+        [HttpGet("Parameters")]
         //[ProducesDefaultResponseType(typeof(ApiResponse<AuthorizationViewModel>))]
         public IActionResult GetParameters(Guid id)
         {
@@ -66,7 +66,7 @@ namespace NeuroEstimulator.API.Controllers
         /// Setar paramêtros para o paciente
         /// </summary>
         /// <returns></returns>
-        [HttpPost("{id}/Parameters")]
+        [HttpPost("Parameters")]
         //[ProducesDefaultResponseType(typeof(ApiResponse<AuthorizationViewModel>))]
         public IActionResult SetParameters(SetPatientParametersPayload payload)
         {

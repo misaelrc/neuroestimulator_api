@@ -15,6 +15,7 @@ public class SessionParameters : AuditEntity<Guid>
         MaxPulseWidth = maxPulseWidth;
         MinPulseWidth = minPulseWidth;
         StimulationTime = stimulationTime;
+        Activate();
     }
 
     public double Amplitude {get; private set; }

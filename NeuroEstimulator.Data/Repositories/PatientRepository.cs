@@ -19,7 +19,7 @@ public class PatientRepository : RepositoryBase<Patient>, IPatientRepository
 
     new public async Task<Patient?> GetByIdAsync(Guid id)
     {
-        var result = await GetAsync(x => x.Id == id, includeProperties: "Account");
+        var result = await GetAsync(x => x.Id == id, includeProperties: "Account,Parameters");
         return result.FirstOrDefault();
     }
 }

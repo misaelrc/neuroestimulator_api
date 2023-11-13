@@ -10,6 +10,8 @@ public class PatientViewModel
     public DateTime BirthDate { get; set; }
     public string Email { get; set; }
     public string Phone { get; set; }
+    public bool SessionAllowed { get; private set; }
+    public SessionParametersViewModel? Parameters { get; private set; }
 
     public string? CaretakerName { get; set; }
     public string? CaretakerPhone { get; set; }
