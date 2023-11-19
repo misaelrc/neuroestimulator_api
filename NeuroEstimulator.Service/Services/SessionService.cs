@@ -204,16 +204,17 @@ public class SessionService : ServiceBase, ISessionService
         var session = Task.Run(() => _sessionRepository.GetByIdAsync(payload.SessionId)).Result;
         if (session is null) throw new BadRequestException(SessionErrors.SessionNotFound);
 
-        var segment = new SessionSegment(payload.Difficulty, payload.Intensity);
+        var segment = new SessionSegment(session.ParametersId, payload.Difficulty, payload.Intensity);
         
         session.AddSegment(segment);
 
-        _sessionRepository.Update(session);
+        _sessionSegmentRepository.Add(segment);
+
 
         var result = Task.Run(() => _unitOfWork.CommitAsync()).Result;
         if (result)
         {
-            var model = _mapper.Map<SessionSegmentViewModel>(session);
+            var model = _mapper.Map<SessionSegmentViewModel>(segment);
             return model;
         }
         else

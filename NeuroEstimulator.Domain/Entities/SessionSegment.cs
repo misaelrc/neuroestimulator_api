@@ -6,12 +6,12 @@ namespace NeuroEstimulator.Domain.Entities;
 public class SessionSegment : AuditEntity<Guid>
 {
     public SessionSegment(){}
-    public SessionSegment(int difficulty, int intensity, SessionParameters? parameters = null)
+    public SessionSegment(Guid usedParametersId, int difficulty, int intensity)
     {
         SetId(Guid.NewGuid());
         Difficulty = difficulty;
         Intensity = intensity;
-        UsedParameters = parameters;
+        UsedParametersId = usedParametersId;
     }
 
     public Guid SessionId { get; private set; }
