@@ -84,10 +84,10 @@ namespace NeuroEstimulator.API.Controllers
             return response;
         }
 
-        [HttpGet("GetPatientId/{accountId}")]
+        [HttpGet("GetPatient/{accountId}")]
         public IActionResult GetPatientId(Guid accountId)
         {
-            var response = this.ServiceInvoke(_patientService.GetPatientIdByAccountId, accountId);
+            var response = this.ServiceInvoke(_patientService.GetPatientByAccountId, accountId);
             return response;
         }
 

@@ -19,6 +19,7 @@ public class DomainToViewModelMappingProfile : Profile
         CreateMap<NeuroEstimulator.Domain.Entities.Session, ListSessionViewModel>();
         CreateMap<NeuroEstimulator.Domain.Entities.SessionPhoto, SessionPhotoViewModel>();
         CreateMap<NeuroEstimulator.Domain.Entities.SessionParameters, SessionParametersViewModel>();
+        CreateMap<NeuroEstimulator.Domain.Entities.SessionSegment, SessionSegmentViewModel>();
 
     }
 }

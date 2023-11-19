@@ -80,7 +80,7 @@ public class SessionService : ServiceBase, ISessionService
         }
         else
         {
-            throw new InternalException(PatientErrors.ErrorOnSetPatientParameters);
+            throw new InternalException(SessionErrors.ErrorOnCreateSession);
         }
     }
 
@@ -89,12 +89,21 @@ public class SessionService : ServiceBase, ISessionService
         var patient = Task.Run(() => _patientRepository.GetByIdAsync(payload.PatientId)).Result;
         if (patient is null) throw new BadRequestException(PatientErrors.PatientNotFound);
 
-        var parameters = patient.Parameters;
-        if (parameters is null) throw new BadRequestException(PatientErrors.PatientWithoutParameters);
+        var referenceParameters = patient.Parameters;
+        if (referenceParameters is null) throw new BadRequestException(PatientErrors.PatientWithoutParameters);
+        var parameters = new SessionParameters(
+            referenceParameters.Amplitude,
+            referenceParameters.Frequency,
+            referenceParameters.StimulationTime,
+            referenceParameters.MinPulseWidth,
+            referenceParameters.MaxPulseWidth,
+            referenceParameters.PulseWidth);
 
         var session = new Session(patient.TherapistId, payload.PatientId, parameters);
 
-        session.AddStartWristAmplitudeMeasurement(payload.WristAmplitudeMeasurement);
+        session.Start(payload.WristAmplitudeMeasurement);
+
+
         _sessionRepository.Add(session);
         var result = Task.Run(() => _unitOfWork.CommitAsync()).Result;
         if (result)
@@ -104,44 +113,8 @@ public class SessionService : ServiceBase, ISessionService
         }
         else
         {
-            throw new InternalException(PatientErrors.ErrorOnSetPatientParameters);
+            throw new InternalException(SessionErrors.ErrorOnCreateSession);
         }
-    }
-    public SessionViewModel CreateSession(CreateSessionPayload payload)
-    {
-        var patient = Task.Run(() => _patientRepository.GetByIdAsync(payload.PatientId)).Result;
-        if (patient is null) throw new BadRequestException(PatientErrors.PatientNotFound);
-        
-        var parameters = patient.Parameters;
-        if(parameters is null) throw new BadRequestException(PatientErrors.PatientWithoutParameters);
-
-        // You can consider the last 2 properties as null if you dont need them
-        var session = new Session(patient.TherapistId, payload.PatientId, parameters , payload.SessionDuration, payload.Repetitions);
-
-        _sessionRepository.Add(session);
-
-        var result = Task.Run(() => _unitOfWork.CommitAsync()).Result;
-        if (result)
-        {
-            var model = _mapper.Map<SessionViewModel>(session);
-            return model;
-        }
-        else
-        {
-            throw new InternalException(PatientErrors.ErrorOnSetPatientParameters);
-        }
-    }
-
-    public bool AddSessionSegment(SessionSegmentPayload payload)
-    {
-        var session = Task.Run(() => _sessionRepository.GetAsync(s => s.Id == payload.SessionId)).Result.FirstOrDefault();
-
-        var parameters = new SessionParameters(payload.Amplitude, payload.Frequency, payload.PulseWidth, payload.StimulationTime);
-        var segment = new SessionSegment(payload.Difficulty, payload.Intensity, parameters);
-
-        _sessionSegmentRepository.Add(segment);
-        var result = Task.Run(() => _unitOfWork.CommitAsync()).Result;
-        return result;
     }
 
     public void SetParameters(Guid sessionId, SessionParametersPayload payload)
@@ -224,5 +197,28 @@ public class SessionService : ServiceBase, ISessionService
 
         var model = _mapper.Map<List<ListSessionViewModel>>(result);
         return model;
+    }
+
+    public SessionSegmentViewModel AddSegment(SessionSegmentPayload payload)
+    {
+        var session = Task.Run(() => _sessionRepository.GetByIdAsync(payload.SessionId)).Result;
+        if (session is null) throw new BadRequestException(SessionErrors.SessionNotFound);
+
+        var segment = new SessionSegment(payload.Difficulty, payload.Intensity);
+        
+        session.AddSegment(segment);
+
+        _sessionRepository.Update(session);
+
+        var result = Task.Run(() => _unitOfWork.CommitAsync()).Result;
+        if (result)
+        {
+            var model = _mapper.Map<SessionSegmentViewModel>(session);
+            return model;
+        }
+        else
+        {
+            throw new InternalException(SessionErrors.ErrorOnAddSegment);
+        }
     }
 }

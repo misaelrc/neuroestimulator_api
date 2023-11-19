@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NeuroEstimulator.Domain.Payloads;
+using NeuroEstimulator.Domain.ViewModels;
 using NeuroEstimulator.Framework.Controllers;
 using NeuroEstimulator.Framework.Interfaces;
 using NeuroEstimulator.Service.Interfaces;
@@ -34,13 +35,6 @@ namespace NeuroEstimulator.API.Controllers
             return response;
         }
 
-        [HttpPost("CreateSession")]
-        public IActionResult CreateSession(CreateSessionPayload payload)
-        {
-            var response = this.ServiceInvoke(_sessionService.CreateSession, payload);
-            return response;
-        }
-
         [HttpPost("Start")]
         public IActionResult StartSession(WristAmplitudePayload payload)
         {
@@ -62,13 +56,6 @@ namespace NeuroEstimulator.API.Controllers
             return response;
         }
 
-        [HttpGet("SendUsedParameters")]
-        public IActionResult SendUsedParameters(SessionSegmentPayload payload)
-        {
-            var response = this.ServiceInvoke(_sessionService.AddSessionSegment, payload);
-            return response;
-        }
-
         [HttpPost("UploadPhotos")]
         public IActionResult UploadPhotos([FromForm]/*IFormFile teste */SessionPhotoPayload payload)
         {
@@ -81,6 +68,13 @@ namespace NeuroEstimulator.API.Controllers
         public IActionResult GetPhotos(Guid sessionId)
         {
             var response = this.ServiceInvoke(_sessionService.GetPhotos, sessionId);
+            return response;
+        }
+
+        [HttpPost("AddSegment")]
+        public IActionResult AddSegment(SessionSegmentPayload payload)
+        {
+            var response = this.ServiceInvoke(_sessionService.AddSegment, payload);
             return response;
         }
         #endregion

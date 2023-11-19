@@ -53,7 +53,6 @@ public class Session : AuditEntity<Guid>
         FinishWristAmplitudeMeasurement = wristAmplitude;
         Status = SessionStatusEnum.Finished;
     }
-
     public void Interrupt()
     {
         FinishedAt = DateTime.Now;
@@ -61,6 +60,7 @@ public class Session : AuditEntity<Guid>
     }
 
     public void AddPhoto(SessionPhoto photo) => Photos.Add(photo);
+    public void AddSegment(SessionSegment segment) => Segments.Add(segment);
     public void AddStartWristAmplitudeMeasurement(double wristAmplitude) => StartWristAmplitudeMeasurement = wristAmplitude;
 
     [NotMapped]

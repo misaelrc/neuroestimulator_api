@@ -232,9 +232,15 @@ public class PatientService : ServiceBase, IPatientService
         return parameters;
     }
 
-    public Guid GetPatientIdByAccountId(Guid accountId)
+    public PatientViewModel GetPatientByAccountId(Guid accountId)
     {
-        var result = Task.Run(() => _patientRepository.GetAsync(x => x.AccountId == accountId)).Result.Select(p => p.Id).FirstOrDefault();
-        return result;
+        var result = Task.Run(() => _patientRepository.GetAsync(x => x.AccountId == accountId, includeProperties:"Parameters")).Result.FirstOrDefault();
+
+        if (result is null)
+        {
+            throw new BadRequestException(PatientErrors.PatientNotFound);
+        }
+        var model = _mapper.Map<PatientViewModel>(result);
+        return model;
     }
 }

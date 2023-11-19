@@ -17,5 +17,5 @@ public interface IPatientService
     PatientViewModel SetParameters(SetPatientParametersPayload payload);
     SessionParameters GetParameters(Guid Id);
 
-    Guid GetPatientIdByAccountId(Guid accountId);
+    PatientViewModel GetPatientByAccountId(Guid accountId);
 }
