@@ -14,6 +14,12 @@ namespace NeuroEstimulator.Domain.Entities
             Path = path;
         }
 
+        public SessionPhoto(string path)
+        {
+            SetId(Guid.NewGuid());
+            Path = path;
+        }
+
         public Guid SessionId { get; private set; }
         public string Path { get; private set; }
 

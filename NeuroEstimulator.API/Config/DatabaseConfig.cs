@@ -23,6 +23,7 @@ public static class DatabaseConfig
         services.AddDbContext<DatabaseContext>(options =>
         {
             options.UseSqlServer(databaseConnectionString);
+            //options.UseNpgsql(configuration.GetConnectionString("PG"), b => b.MigrationsAssembly("NeuroEstimulator.PostgresMigrations"));
         });
     }
 }

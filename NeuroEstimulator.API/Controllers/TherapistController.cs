@@ -63,13 +63,13 @@ namespace NeuroEstimulator.API.Controllers
             var response = this.ServiceInvoke(_patientService.GetAllPatients);
             return response;
         }
+        
         [HttpPut("EditPatient")]
         public IActionResult EditPatient(EditPatientPayload payload)
         {
             var response = this.ServiceInvoke(_patientService.EditPatient, payload);
             return response;
         }
-
 
         [HttpDelete("DeletePatient/{id}")]
         public IActionResult DeletePatient(Guid id)
@@ -95,6 +95,12 @@ namespace NeuroEstimulator.API.Controllers
             return response;
         }
 
+        [HttpPost("CreateSession")]
+        public IActionResult CreateSession(TherapistCreateSessionPayload payload)
+        {
+            
+            return Ok(payload);
+        }
         #endregion
     }
 }

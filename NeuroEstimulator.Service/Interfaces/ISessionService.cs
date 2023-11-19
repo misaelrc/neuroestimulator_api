@@ -6,8 +6,10 @@ namespace NeuroEstimulator.Service.Interfaces;
 
 public interface ISessionService 
 {
-    Session GetSessionById(Guid sessionId);
-    SessionViewModel CreateSession(CreateSessionPayload payload); 
+    SessionViewModel GetSessionById(Guid sessionId);
+    SessionViewModel CreateSession(CreateSessionPayload payload);
+    SessionViewModel PatientCreateSession(PatientCreateSessionPayload payload);
+    SessionViewModel TherapistCreateSession(TherapistCreateSessionPayload payload);
     bool AddSessionSegment(SessionSegmentPayload payload);
     void SetParameters(Guid sessionId, SessionParametersPayload parameters);
     SessionParameters GetParameters(Guid sessionId);

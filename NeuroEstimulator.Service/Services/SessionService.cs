@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using NeuroEstimulator.Data.Interfaces;
 using NeuroEstimulator.Data.Repositories;
 using NeuroEstimulator.Domain.Entities;
@@ -10,6 +11,7 @@ using NeuroEstimulator.Framework.Exceptions;
 using NeuroEstimulator.Framework.Interfaces;
 using NeuroEstimulator.Framework.Services;
 using NeuroEstimulator.Service.Interfaces;
+using System.Reflection.Metadata;
 
 namespace NeuroEstimulator.Service.Services;
 
@@ -43,6 +45,68 @@ public class SessionService : ServiceBase, ISessionService
         _fileService = fileService;
     }
     
+    public SessionViewModel PatientCreateSession(PatientCreateSessionPayload payload)
+    {
+        var patient = Task.Run(() => _patientRepository.GetByIdAsync(payload.PatientId)).Result;
+        if (patient is null) throw new BadRequestException(PatientErrors.PatientNotFound);
+
+        var referenceParameters = patient.Parameters;
+        if (referenceParameters is null) throw new BadRequestException(PatientErrors.PatientWithoutParameters);
+        var parameters = new SessionParameters(
+            referenceParameters.Amplitude,
+            referenceParameters.Frequency,
+            referenceParameters.StimulationTime,
+            referenceParameters.MinPulseWidth,
+            referenceParameters.MaxPulseWidth,
+            referenceParameters.PulseWidth);
+
+        var session = new Session(patient.TherapistId, payload.PatientId, parameters);
+
+        // adicionar fotos
+        var uris = Task.Run(() => _fileService.UploadFilesAsync(payload.Files)).Result;
+
+        // salvar caminhos no 
+        foreach ( var uri in uris )
+        {
+            session.AddPhoto(new SessionPhoto(uri));
+        }
+
+        _sessionRepository.Add(session);
+        var result = Task.Run(() => _unitOfWork.CommitAsync()).Result;
+        if (result)
+        {
+            var model = _mapper.Map<SessionViewModel>(session);
+            return model;
+        }
+        else
+        {
+            throw new InternalException(PatientErrors.ErrorOnSetPatientParameters);
+        }
+    }
+
+    public SessionViewModel TherapistCreateSession(TherapistCreateSessionPayload payload)
+    {
+        var patient = Task.Run(() => _patientRepository.GetByIdAsync(payload.PatientId)).Result;
+        if (patient is null) throw new BadRequestException(PatientErrors.PatientNotFound);
+
+        var parameters = patient.Parameters;
+        if (parameters is null) throw new BadRequestException(PatientErrors.PatientWithoutParameters);
+
+        var session = new Session(patient.TherapistId, payload.PatientId, parameters);
+
+        session.AddStartWristAmplitudeMeasurement(payload.WristAmplitudeMeasurement);
+        _sessionRepository.Add(session);
+        var result = Task.Run(() => _unitOfWork.CommitAsync()).Result;
+        if (result)
+        {
+            var model = _mapper.Map<SessionViewModel>(session);
+            return model;
+        }
+        else
+        {
+            throw new InternalException(PatientErrors.ErrorOnSetPatientParameters);
+        }
+    }
     public SessionViewModel CreateSession(CreateSessionPayload payload)
     {
         var patient = Task.Run(() => _patientRepository.GetByIdAsync(payload.PatientId)).Result;
@@ -117,18 +181,27 @@ public class SessionService : ServiceBase, ISessionService
     {
         //adicionar a foto no store
         var blob = Task.Run(() =>
-            _fileService.UploadAsync(payload.file, payload.SessionId.ToString() + $"{DateTime.Now:yyyyMMddTHHmmss}")
+            _fileService.UploadAsync(payload.File, payload.SessionId.ToString() + $"{DateTime.Now:yyyyMMddTHHmmss}")
         ).Result;
 
-        _sessionPhotoRepository.Add(new SessionPhoto(payload.SessionId, blob.Item1));
+        //_sessionPhotoRepository.Add(new SessionPhoto(payload.SessionId, blob.Item1));
      
         var result = Task.Run(() => _unitOfWork.CommitAsync()).Result;
         return result;
     }
 
-    public Session GetSessionById(Guid sessionId) {
-        var result = Task.Run(() => _sessionRepository.GetByIdAsync(sessionId, x => x.Parameters, x => x.Patient)).Result;
-        return result;
+    public SessionViewModel GetSessionById(Guid sessionId) {
+        var result = Task.Run(() => _sessionRepository.GetByIdAsync(sessionId)).Result;
+
+        if (result != null)
+        {
+            var model = _mapper.Map<SessionViewModel>(result);
+            return model;
+        }
+        else
+        {
+            throw new InternalException();//TODO - Arrumar o erro
+        }
     }
     public IList<SessionViewModel> GetSessionsByPatient(Guid patientId)
     {
@@ -147,7 +220,7 @@ public class SessionService : ServiceBase, ISessionService
 
     public IList<ListSessionViewModel> GetSessionsByPatientId(Guid patientId)
     {
-        var result = Task.Run(() => _sessionRepository.GetAsync(x => x.PatientId == patientId)).Result;
+        var result = Task.Run(() => _sessionRepository.GetAsync(x => x.PatientId == patientId, orderBy: x => x.OrderBy(s => s.CreationDate))).Result;
 
         var model = _mapper.Map<List<ListSessionViewModel>>(result);
         return model;

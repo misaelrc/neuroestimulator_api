@@ -12,17 +12,18 @@ public abstract class BaseAuditEntityMap<TEntity, TKey> : BaseActiveEntityMap<TE
 
         builder
             .Property(b => b.CreationDate)
-            .HasColumnType("datetime2")
-            .HasDefaultValueSql("GETDATE()")
+            //.HasColumnType("datetime2")
+            .HasDefaultValue(DateTime.Now)
+            //.HasDefaultValueSql("GETDATE()")
             .IsRequired();
 
         builder
-            .Property(b => b.UpdateDate)
-            .HasColumnType("datetime2");
+            .Property(b => b.UpdateDate);
+            //.HasColumnType("datetime2");
 
         builder
-            .Property(b => b.DeleteDate)
-            .HasColumnType("datetime2");
+            .Property(b => b.DeleteDate);
+            //.HasColumnType("datetime2");
 
         CreateModel(builder);
     }

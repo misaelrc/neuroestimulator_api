@@ -1,14 +1,15 @@
 using NeuroEstimulator.API.Config;
 using NeuroEstimulator.Framework.StartupBase;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 RestStartupBase.ConfigureServices(builder.Services, Assembly.GetExecutingAssembly().GetName());
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles); ;
 builder.Services.AddCorsConfiguration(builder.Configuration);
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();

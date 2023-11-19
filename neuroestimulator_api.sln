@@ -13,17 +13,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Infra", "4 - Infra", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Framework", "5 - Framework", "{20465DD4-36A6-49E4-A6ED-6C6B8FEAFE43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuroEstimulator.API", "NeuroEstimulator.API\NeuroEstimulator.API.csproj", "{A502183E-BAA2-48A7-B255-0BAFDB069216}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeuroEstimulator.API", "NeuroEstimulator.API\NeuroEstimulator.API.csproj", "{A502183E-BAA2-48A7-B255-0BAFDB069216}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuroEstimulator.Domain", "NeuroEstimulator.Domain\NeuroEstimulator.Domain.csproj", "{0C7A3794-B6CD-4D73-806B-ED282E046593}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeuroEstimulator.Domain", "NeuroEstimulator.Domain\NeuroEstimulator.Domain.csproj", "{0C7A3794-B6CD-4D73-806B-ED282E046593}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuroEstimulator.Service", "NeuroEstimulator.Service\NeuroEstimulator.Service.csproj", "{9981F9F2-BAAD-4D5B-AB94-323BB3C9A1F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeuroEstimulator.Service", "NeuroEstimulator.Service\NeuroEstimulator.Service.csproj", "{9981F9F2-BAAD-4D5B-AB94-323BB3C9A1F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuroEstimulator.CrossCutting", "NeuroEstimulator.CrossCutting\NeuroEstimulator.CrossCutting.csproj", "{190D1146-B60B-4A3E-AFD7-33B408FFBAC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeuroEstimulator.CrossCutting", "NeuroEstimulator.CrossCutting\NeuroEstimulator.CrossCutting.csproj", "{190D1146-B60B-4A3E-AFD7-33B408FFBAC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuroEstimulator.Data", "NeuroEstimulator.Data\NeuroEstimulator.Data.csproj", "{CF64A511-CD1B-4208-8DF5-7FD680F851CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeuroEstimulator.Data", "NeuroEstimulator.Data\NeuroEstimulator.Data.csproj", "{CF64A511-CD1B-4208-8DF5-7FD680F851CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuroEstimulator.Framework", "NeuroEstimulator.Framework\NeuroEstimulator.Framework.csproj", "{E2B1230D-618F-4C81-8261-14A839EAC375}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeuroEstimulator.Framework", "NeuroEstimulator.Framework\NeuroEstimulator.Framework.csproj", "{E2B1230D-618F-4C81-8261-14A839EAC375}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuroEstimulator.PostgresMigrations", "NeuroEstimulator.PostgresMigrations\NeuroEstimulator.PostgresMigrations.csproj", "{F2B7B9F7-7C13-4C1B-BFD9-0904F510CA7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,10 @@ Global
 		{E2B1230D-618F-4C81-8261-14A839EAC375}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2B1230D-618F-4C81-8261-14A839EAC375}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2B1230D-618F-4C81-8261-14A839EAC375}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2B7B9F7-7C13-4C1B-BFD9-0904F510CA7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2B7B9F7-7C13-4C1B-BFD9-0904F510CA7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2B7B9F7-7C13-4C1B-BFD9-0904F510CA7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2B7B9F7-7C13-4C1B-BFD9-0904F510CA7F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,6 +72,7 @@ Global
 		{190D1146-B60B-4A3E-AFD7-33B408FFBAC6} = {5ABDC13A-364A-4597-A4D8-B653B9A83A10}
 		{CF64A511-CD1B-4208-8DF5-7FD680F851CB} = {5ABDC13A-364A-4597-A4D8-B653B9A83A10}
 		{E2B1230D-618F-4C81-8261-14A839EAC375} = {20465DD4-36A6-49E4-A6ED-6C6B8FEAFE43}
+		{F2B7B9F7-7C13-4C1B-BFD9-0904F510CA7F} = {5ABDC13A-364A-4597-A4D8-B653B9A83A10}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {76AA22C1-43E8-4CAB-99C0-A31849801DFE}

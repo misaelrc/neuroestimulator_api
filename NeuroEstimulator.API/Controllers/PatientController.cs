@@ -7,6 +7,7 @@ using NeuroEstimulator.Framework.Interfaces;
 using NeuroEstimulator.Framework.Result;
 using NeuroEstimulator.Framework.Security.Authorization;
 using NeuroEstimulator.Service.Interfaces;
+using NeuroEstimulator.Service.Services;
 
 namespace NeuroEstimulator.API.Controllers
 {
@@ -19,6 +20,7 @@ namespace NeuroEstimulator.API.Controllers
         /// Referencia interna ao serviço 
         /// </summary>
         private readonly IPatientService _patientService = null;
+        private readonly ISessionService _sessionService = null;
 
         #endregion
 
@@ -28,9 +30,10 @@ namespace NeuroEstimulator.API.Controllers
         /// Construtor
         /// </summary>
 
-        public PatientController(IApiContext apiContext, IPatientService patientService) : base(apiContext)
+        public PatientController(IApiContext apiContext, IPatientService patientService, ISessionService sessionService) : base(apiContext)
         {
             _patientService = patientService;
+            _sessionService = sessionService;
         }
 
         #endregion
@@ -71,6 +74,27 @@ namespace NeuroEstimulator.API.Controllers
         public IActionResult SetParameters(SetPatientParametersPayload payload)
         {
             var response = this.ServiceInvoke(_patientService.SetParameters, payload);
+            return response;
+        }
+
+        [HttpPost("CreateSession")]
+        public IActionResult CreateSession([FromForm]PatientCreateSessionPayload payload)
+        {
+            var response = this.ServiceInvoke(_sessionService.PatientCreateSession, payload);
+            return response;
+        }
+
+        [HttpGet("GetPatientId/{accountId}")]
+        public IActionResult GetPatientId(Guid accountId)
+        {
+            var response = this.ServiceInvoke(_patientService.GetPatientIdByAccountId, accountId);
+            return response;
+        }
+
+        [HttpGet("{id}/Sessions")]
+        public IActionResult GetSessionsByPatientId(Guid id)
+        {
+            var response = this.ServiceInvoke(_sessionService.GetSessionsByPatientId, id);
             return response;
         }
         #endregion

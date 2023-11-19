@@ -8,8 +8,6 @@ using NeuroEstimulator.Service.Services;
 
 namespace NeuroEstimulator.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
     public class SessionController : ApiBaseController
     {
         #region Fields
@@ -33,13 +31,6 @@ namespace NeuroEstimulator.API.Controllers
         public IActionResult GetSession(Guid id)
         {
             var response = this.ServiceInvoke(_sessionService.GetSessionById, id);
-            return response;
-        }
-
-        [HttpGet("/patient/{id}")]
-        public IActionResult GetSessionsByPatientId(Guid patientId)
-        {
-            var response = this.ServiceInvoke(_sessionService.GetSessionsByPatientId, patientId);
             return response;
         }
 
@@ -78,9 +69,10 @@ namespace NeuroEstimulator.API.Controllers
             return response;
         }
 
-        [HttpGet("UploadPhotos")]
-        public IActionResult UploadPhotos(SessionPhotoPayload payload)
+        [HttpPost("UploadPhotos")]
+        public IActionResult UploadPhotos([FromForm]/*IFormFile teste */SessionPhotoPayload payload)
         {
+            //var payload = new SessionPhotoPayload() { File = teste, SessionId = Guid.NewGuid() };
             var response = this.ServiceInvoke(_sessionService.AddPhoto, payload);
             return response;
         }

@@ -20,7 +20,7 @@ public class FileService
 
     public async Task<Tuple<string, string>> UploadAsync(IFormFile blob, string name)
     {
-        BlobClient client = _filesContainer.GetBlobClient(blob.Name);
+        BlobClient client = _filesContainer.GetBlobClient(blob.FileName);
 
         await using (Stream? data = blob.OpenReadStream())
         {
@@ -53,4 +53,21 @@ public class FileService
         await file.DeleteAsync();
     }
 
+    public async Task<List<string>> UploadFilesAsync(ICollection<IFormFile> blobs)
+    {
+        var uris = new List<string>();
+        foreach (var blob in blobs)
+        {
+            var filename = Guid.NewGuid() + Path.GetExtension(blob.FileName);
+            BlobClient client = _filesContainer.GetBlobClient(filename);
+
+            await using (Stream? data = blob.OpenReadStream())
+            {
+                await client.UploadAsync(data);
+            }
+
+            uris.Add(client.Uri.AbsoluteUri);
+        }
+        return uris;
+    }
 }

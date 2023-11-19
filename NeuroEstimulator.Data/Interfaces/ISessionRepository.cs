@@ -5,4 +5,5 @@ namespace NeuroEstimulator.Data.Interfaces;
 
 public interface ISessionRepository : IRepositoryBase<Session>
 {
+    Task<Session?> GetByIdAsync(Guid id);
 }

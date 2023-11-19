@@ -231,4 +231,10 @@ public class PatientService : ServiceBase, IPatientService
 
         return parameters;
     }
+
+    public Guid GetPatientIdByAccountId(Guid accountId)
+    {
+        var result = Task.Run(() => _patientRepository.GetAsync(x => x.AccountId == accountId)).Result.Select(p => p.Id).FirstOrDefault();
+        return result;
+    }
 }

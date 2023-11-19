@@ -8,6 +8,9 @@ public class SessionViewModel
     public Guid TherapistId { get; set; }
     public Guid PatientId { get; set; }
     public Guid ParametersId { get; set; }
+    public SessionParametersViewModel Parameters { get; set; }
+    public ICollection<SessionPhotoViewModel> Photos { get; set; }
+    public ICollection<SessionSegment> Segments { get; set; }
     public double? StartWristAmplitudeMeasurement { get; set; }
     public double? FinishWristAmplitudeMeasurement { get; set; }
     public int SessionDuration { get; set; }

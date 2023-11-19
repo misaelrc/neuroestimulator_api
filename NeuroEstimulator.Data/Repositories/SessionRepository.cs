@@ -11,4 +11,9 @@ public class SessionRepository : RepositoryBase<Session>, ISessionRepository
     public SessionRepository(IDbFactory dbFactory, IApiContext apiContext) 
         : base(dbFactory, apiContext) { }
 
+    new public async Task<Session?> GetByIdAsync(Guid id)
+    {
+        var result = await GetAsync(x => x.Id == id, includeProperties: "Parameters,Segments,Photos");
+        return result.FirstOrDefault();
+    }
 }
