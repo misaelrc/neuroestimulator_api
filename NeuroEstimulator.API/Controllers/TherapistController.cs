@@ -99,7 +99,7 @@ namespace NeuroEstimulator.API.Controllers
         public IActionResult CreateSession(TherapistCreateSessionPayload payload)
         {
             var response = this.ServiceInvoke(_sessionService.TherapistCreateSession, payload);
-            return Ok(payload);
+            return response;
         }
         #endregion
     }
